@@ -1,0 +1,8 @@
+
+*.pt
+
+MNIST_data/raw/
+
+__pycache__/
+
+\.ipynb_checkpoints/pytorch_tensors-checkpoint\.ipynb
