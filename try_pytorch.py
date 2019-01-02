@@ -13,11 +13,22 @@ from torchvision import datasets, transforms
 transform = transforms.Compose([transforms.ToTensor(),
                               transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
                              ])
-# Download and load the training data
-trainset = datasets.MNIST('MNIST_data/', download=True, train=True, transform=transform)
+datasets_names = "MNIST", "F_MNIST"
+
+dataset_name = "F_MNIST"
+
+if dataset_name == "MNIST" :
+    # Download and load the training data
+    trainset = datasets.MNIST(dataset_name + "_data/", download=True, train=True, transform=transform)
+    # Download and load the test data
+    testset = datasets.MNIST(dataset_name + "_data/", download=True, train=False, transform=transform)
+else:
+    # Download and load the training data
+    trainset = datasets.FashionMNIST(dataset_name + "_data/", download=True, train=True, transform=transform)
+    # Download and load the test data
+    testset = datasets.FashionMNIST(dataset_name + "_data/", download=True, train=False, transform=transform)
+
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
-# Download and load the test data
-testset = datasets.MNIST('MNIST_data/', download=True, train=False, transform=transform)
 testloader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=True)
 
 
@@ -40,7 +51,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.003)
 
 
-epochs = 3
+epochs = 5
 print_every = 40
 steps = 0
 for e in range(epochs):
@@ -65,3 +76,17 @@ for e in range(epochs):
                   "Loss: {:.4f}".format(running_loss / print_every))
 
             running_loss = 0
+
+
+images, labels = next(iter(trainloader))
+
+img = images[0].view(1, 784)
+# Turn off gradients to speed up this part
+with torch.no_grad():
+    logits = model.forward(img)
+
+# Output of the network are logits, need to take softmax for probabilities
+ps = F.softmax(logits, dim=1)
+helper.view_classify(img.view(1, 28, 28), ps)
+
+print("done")
