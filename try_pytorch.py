@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from pytorch_base_network import PyTorchBaseNetwork, PyTorchTrivialNetwork
+from pytorch_base_network import PyTorchBaseNetwork
 from torch import nn
 from torch import optim
 import torch.nn.functional as F
@@ -21,19 +21,17 @@ testset = datasets.MNIST('MNIST_data/', download=True, train=False, transform=tr
 testloader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=True)
 
 
-from collections import OrderedDict
-model = nn.Sequential(OrderedDict([
-                      ('fc1', nn.Linear(784,200)),
-                      ('relu1', nn.ReLU()),
-                      ('fc2', nn.Linear(200, 100)),
-                      ('relu2', nn.ReLU()),
-                      ('output', nn.Linear(100,10))]))
+# from collections import OrderedDict
+# model = nn.Sequential(OrderedDict([
+#                       ('fc1', nn.Linear(784,200)),
+#                       ('relu1', nn.ReLU()),
+#                       ('fc2', nn.Linear(200, 100)),
+#                       ('relu2', nn.ReLU()),
+#                       ('output', nn.Linear(100,10))]))
 
 
 
 model =PyTorchBaseNetwork(784, None, [200,100],10)
-
-model = PyTorchTrivialNetwork()
 
 
 
@@ -42,7 +40,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.003)
 
 
-epochs = 10
+epochs = 3
 print_every = 40
 steps = 0
 for e in range(epochs):

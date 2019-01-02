@@ -25,30 +25,6 @@ def squeeze_iterable(element):
 
 
 
-class PyTorchTrivialNetwork(nn.Module):
-    """
-    Basic PyTorch Network composed of Convolutional and linear layers.
-    The Convolutional linear layers are positioned before the linear layer by default. The network only supports linear
-    layers for the moment.
-    """
-    def __init__(self):
-        """ Network architecture initialization according to linear and convolutional layers features """
-        super().__init__()
-        self.fc1 = nn.Linear(784, 200)
-        self.fc2 = nn.Linear(200, 100)
-        self.output = nn.Linear(100, 10)
-
-    def forward(self, x):
-        x = self.fc1(x)
-        x = F.relu(x)
-        x = self.fc2(x)
-        x = F.relu(x)
-        x = self.output(x)
-        #x = F.softmax(x, dim=1)
-        return x
-
-
-
 class PyTorchBaseNetwork(nn.Module):
     """
     Basic PyTorch Network composed of Convolutional and linear layers.
@@ -65,7 +41,7 @@ class PyTorchBaseNetwork(nn.Module):
         if self.all_linear_network:
             assert (conv_layers is None)
             prev_layer_n = input_shape
-            self.fc_layers=[]
+            self.fc_layers=nn.ModuleList()
             for curr_layer_n in lin_layers:
                 self.fc_layers.append(nn.Linear(prev_layer_n, curr_layer_n))
                 prev_layer_n = curr_layer_n
